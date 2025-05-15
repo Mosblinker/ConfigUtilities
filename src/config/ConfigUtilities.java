@@ -4,9 +4,11 @@
  */
 package config;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Window;
 import java.nio.*;
 
 /**
@@ -266,5 +268,25 @@ public final class ConfigUtilities {
             return false;
         return null;
     }
-    
+    /**
+     * This sets the size of the given component, respecting its minimum size.
+     * @param comp The component to set the size of.
+     * @param dim The size for the component.
+     */
+    public static void setSizeOfComponent(Component comp, Dimension dim){
+            // If there isn't a size provided
+        if (dim == null)
+            return;
+            // Get the minimum size for the component
+        Dimension min = comp.getMinimumSize();
+            // Make sure the size is not smaller than the minimum size, 
+            // modifying the minimum size to not modify the given size.
+        min.width = Math.max(dim.width, min.width);
+        min.height = Math.max(dim.height, min.height);
+            // If the component is a window
+        if (comp instanceof Window)
+            comp.setSize(min);
+        else
+            comp.setPreferredSize(min);
+    }
 }
