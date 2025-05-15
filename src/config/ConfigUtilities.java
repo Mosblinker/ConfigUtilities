@@ -274,7 +274,7 @@ public final class ConfigUtilities {
      * @param dim The size for the component.
      * @return The resulting size for the component.
      */
-    public static Dimension setSizeOfComponent(Component comp, Dimension dim){
+    public static Dimension setComponentSize(Component comp, Dimension dim){
             // If there isn't a size provided
         if (dim == null)
             return comp.getSize();
