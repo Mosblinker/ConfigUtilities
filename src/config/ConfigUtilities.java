@@ -349,12 +349,11 @@ public final class ConfigUtilities {
      * This sets the size of the given component, respecting its minimum size.
      * @param comp The component to set the size of.
      * @param dim The size for the component.
-     * @return The resulting size for the component.
      */
-    public static Dimension setComponentSize(Component comp, Dimension dim){
+    public static void setComponentSize(Component comp, Dimension dim){
             // If there isn't a size provided
         if (dim == null)
-            return comp.getSize();
+            return;
             // Get the minimum size for the component
         Dimension min = comp.getMinimumSize();
             // Make sure the size is not smaller than the minimum size, 
@@ -366,7 +365,6 @@ public final class ConfigUtilities {
             comp.setSize(min);
         else
             comp.setPreferredSize(min);
-        return min;
     }
     /**
      * This sets the bounds of the given component, respecting its minimum size.
