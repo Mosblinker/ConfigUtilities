@@ -380,10 +380,11 @@ public final class ConfigUtilities {
             int width, int height){
             // Get the minimum size for the component
         Dimension min = comp.getMinimumSize();
-            // Make sure the size is not smaller than the minimum size.
-        width = Math.max(width, min.width);
-        height = Math.max(height, min.height);
-        comp.setBounds(x, y, width, height);
+            // Set the size of the component, making sure the size is not 
+            // smaller than the minimum size.
+        comp.setBounds(x, y, 
+                Math.max(width, min.width), 
+                Math.max(height, min.height));
     }
     
     /**
