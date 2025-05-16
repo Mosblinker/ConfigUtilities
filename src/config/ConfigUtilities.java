@@ -348,23 +348,30 @@ public final class ConfigUtilities {
     /**
      * This sets the size of the given component, respecting its minimum size.
      * @param comp The component to set the size of.
-     * @param dim The size for the component.
+     * @param width The new width of the component.
+     * @param height The new height of the component.
      */
-    public static void setComponentSize(Component comp, Dimension dim){
-            // If there isn't a size provided
-        if (dim == null)
-            return;
+    public static void setComponentSize(Component comp, int width, int height){
             // Get the minimum size for the component
         Dimension min = comp.getMinimumSize();
-            // Make sure the size is not smaller than the minimum size, 
-            // modifying the minimum size to not modify the given size.
-        min.width = Math.max(dim.width, min.width);
-        min.height = Math.max(dim.height, min.height);
+            // Make sure the size is not smaller than the minimum size
+        min.width = Math.max(width, min.width);
+        min.height = Math.max(height, min.height);
             // If the component is a window
         if (comp instanceof Window)
             comp.setSize(min);
         else
             comp.setPreferredSize(min);
+    }
+    /**
+     * This sets the size of the given component, respecting its minimum size.
+     * @param comp The component to set the size of.
+     * @param dim The size for the component.
+     */
+    public static void setComponentSize(Component comp, Dimension dim){
+            // If there was a size provided
+        if (dim != null)
+            setComponentSize(comp,dim.width,dim.height);
     }
     /**
      * This sets the bounds of the given component, respecting its minimum size.
