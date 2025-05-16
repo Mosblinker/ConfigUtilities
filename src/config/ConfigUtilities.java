@@ -4,6 +4,7 @@
  */
 package config;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -31,6 +32,11 @@ public final class ConfigUtilities {
      * should result in a Base64 encoded String that starts with "RT".
      */
     public static final short RECTANGLE_BYTE_ARRAY_HEADER = (short) 0x4530;
+    /**
+     * This is the header short for colors stored in byte arrays. This should 
+     * result in a Base64 encoded String that starts with "CL".
+     */
+    public static final short COLOR_BYTE_ARRAY_HEADER = (short) 0x08B0;
     /**
      * This class cannot be constructed.
      */
@@ -85,8 +91,8 @@ public final class ConfigUtilities {
      * @return 
      */
     protected static IntBuffer toIntBuffer(short header, byte[] value){
-            // Wrap the byte array with a read only byte buffer to read from to 
-        ByteBuffer buffer = ByteBuffer.wrap(value).asReadOnlyBuffer();  // it
+            // Wrap the byte array with a read only byte buffer to read from it
+        ByteBuffer buffer = ByteBuffer.wrap(value).asReadOnlyBuffer();
         try{    // If the byte array's header matches the given header
             if (buffer.getShort() == header){
                     // Return the byte buffer as an IntBuffer
@@ -253,6 +259,77 @@ public final class ConfigUtilities {
      */
     public static Rectangle rectangleFromByteArray(byte[] value){
         return rectangleFromByteArray(value,null);
+    }
+    /**
+     * 
+     * @param color
+     * @return 
+     */
+    public static String colorToString(Color color){
+            // If the color is null
+        if (color == null)
+            return null;
+        return String.format("%08X", color.getRGB());
+    }
+    /**
+     * 
+     * @param value
+     * @param defaultValue
+     * @return 
+     */
+    public static Color colorFromString(String value, Color defaultValue){
+            // If the given value is not null
+        if (value != null){
+                // Try to parse the hexadecimal string and get the color from 
+                // the given string. If there are more than 6 characters in the 
+            try{// string, then the alpha component was specified 
+                return new Color(Integer.parseUnsignedInt(value,16),
+                        value.length()>6);
+            } catch(NumberFormatException ex){ }
+        }
+        return defaultValue;
+    }
+    /**
+     * 
+     * @param color
+     * @return 
+     */
+    public static byte[] colorToByteArray(Color color){
+            // If the color is null
+        if (color == null)
+            return null;
+        return intArraytoByteArray(COLOR_BYTE_ARRAY_HEADER,color.getRGB());
+    }
+    /**
+     * 
+     * @param value
+     * @param defaultValue
+     * @return 
+     */
+    public static Color colorFromByteArray(byte[] value, Color defaultValue){
+            // If the given value is not null and its length is greater than 2 
+            // and its length is less than or equal to 6
+        if (value != null && value.length > 2 && value.length <= Short.BYTES+Integer.BYTES){
+                // Get the header as a short
+            short header = (short)((Byte.toUnsignedInt(value[0]) << Byte.SIZE) | 
+                    Byte.toUnsignedInt(value[1]));
+               // If the byte array's header matches the color header
+            if (header == COLOR_BYTE_ARRAY_HEADER){
+                    // This gets if the byte array encodes an alpha component
+                boolean hasAlpha = value.length == Short.BYTES+Integer.BYTES;
+                    // This will get the RGB value from the byte array
+                int rgb = 0;
+                    // Go through the remaining bytes in the array
+                for (int i = 2; i < value.length; i++){
+                        // Shift over the current value by one byte
+                    rgb <<= Byte.SIZE;
+                        // Append the next byte in the array
+                    rgb |= Byte.toUnsignedInt(value[i]);
+                }
+                return new Color(rgb,hasAlpha);
+            }
+        }
+        return defaultValue;
     }
     /**
      * 
