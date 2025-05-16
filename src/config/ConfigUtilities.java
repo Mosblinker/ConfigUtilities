@@ -368,4 +368,32 @@ public final class ConfigUtilities {
             comp.setPreferredSize(min);
         return min;
     }
+    /**
+     * This sets the bounds of the given component, respecting its minimum size.
+     * @param comp The component to set the bounds of.
+     * @param x The new x-coordinate for the component.
+     * @param y The new y-coordinate for the component.
+     * @param width The new width for the component.
+     * @param height The new height for the component.
+     */
+    public static void setComponentBounds(Component comp, int x, int y, 
+            int width, int height){
+            // Get the minimum size for the component
+        Dimension min = comp.getMinimumSize();
+            // Make sure the size is not smaller than the minimum size.
+        width = Math.max(width, min.width);
+        height = Math.max(height, min.height);
+        comp.setBounds(x, y, width, height);
+    }
+    
+    /**
+     * This sets the bounds of the given component, respecting its minimum size.
+     * @param comp The component to set the bounds of.
+     * @param rect The bounds for the component.
+     */
+    public static void setComponentBounds(Component comp, Rectangle rect){
+            // If a rectangle was provided
+        if (rect != null)
+            setComponentBounds(comp,rect.x,rect.y,rect.width,rect.height);
+    }
 }
