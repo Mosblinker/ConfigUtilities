@@ -5,10 +5,12 @@
 package config;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.nio.*;
+import java.util.prefs.Preferences;
 
 /**
  * A utility library used with configuration stuff.
@@ -342,5 +344,153 @@ public final class ConfigUtilities {
         else if ("false".equalsIgnoreCase(value))
             return false;
         return null;
+    }
+    /**
+     * 
+     * @param node
+     * @param key
+     * @param defaultValue
+     * @return 
+     */
+    public static Dimension getDimension(Preferences node, String key, 
+            Dimension defaultValue){
+        return dimensionFromByteArray(node.getByteArray(key, null), 
+                defaultValue);
+    }
+    /**
+     * 
+     * @param node
+     * @param key
+     * @param width
+     * @param height 
+     */
+    public static void putDimension(Preferences node, String key, 
+            int width, int height){
+        node.putByteArray(key, dimensionToByteArray(width, height));
+    }
+    /**
+     * 
+     * @param node
+     * @param key
+     * @param value 
+     */
+    public static void putDimension(Preferences node, String key, 
+            Dimension value){
+            // If the dimension object is null
+        if (value == null)
+                // Remove the key
+            node.remove(key);
+        else 
+            putDimension(node,key,value.width,value.height);
+    }
+    /**
+     * 
+     * @param node
+     * @param key
+     * @param comp 
+     */
+    public static void putDimension(Preferences node, String key, Component comp){
+        putDimension(node,key,comp.getWidth(),comp.getHeight());
+    }
+    /**
+     * 
+     * @param node
+     * @param key
+     * @param defaultValue
+     * @return 
+     */
+    public static Point getPoint(Preferences node, String key, Point defaultValue){
+        return pointFromByteArray(node.getByteArray(key, null), 
+                defaultValue);
+    }
+    /**
+     * 
+     * @param node
+     * @param key
+     * @param x
+     * @param y 
+     */
+    public static void putPoint(Preferences node, String key, int x, int y){
+        node.putByteArray(key, pointToByteArray(x, y));
+    }
+    /**
+     * 
+     * @param node
+     * @param key
+     * @param value 
+     */
+    public static void putPoint(Preferences node, String key, Point value){
+            // If the point object is null
+        if (value == null)
+                // Remove the key
+            node.remove(key);
+        else 
+            putPoint(node,key,value.x,value.y);
+    }
+    /**
+     * 
+     * @param node
+     * @param key
+     * @param comp 
+     */
+    public static void putPoint(Preferences node, String key, Component comp){
+        putPoint(node,key,comp.getX(),comp.getY());
+    }
+    /**
+     * 
+     * @param node
+     * @param key
+     * @param defaultValue
+     * @return 
+     */
+    public static Rectangle getRectangle(Preferences node, String key, 
+            Rectangle defaultValue){
+        return rectangleFromByteArray(node.getByteArray(key, null), defaultValue);
+    }
+    /**
+     * 
+     * @param node
+     * @param key
+     * @param x
+     * @param y
+     * @param width
+     * @param height 
+     */
+    public static void putRectangle(Preferences node, String key, int x, int y, 
+            int width, int height){
+        node.putByteArray(key, rectangleToByteArray(x, y, width, height));
+    }
+    /**
+     * 
+     * @param node
+     * @param key
+     * @param width
+     * @param height 
+     */
+    public static void putRectangle(Preferences node, String key, int width, int height){
+        putRectangle(node,key,0,0,width,height);
+    }
+    /**
+     * 
+     * @param node
+     * @param key
+     * @param value 
+     */
+    public static void putRectangle(Preferences node, String key, Rectangle value){
+            // If the rectangle object is null
+        if (value == null)
+                // Remove the key
+            node.remove(key);
+        else 
+            putRectangle(node,key,value.x,value.y,value.width,value.height);
+    }
+    /**
+     * 
+     * @param node
+     * @param key
+     * @param comp 
+     */
+    public void putRectangle(Preferences node, String key, Component comp){
+        putRectangle(node,key,comp.getX(),comp.getY(),comp.getWidth(),comp.getHeight());
     }
 }
