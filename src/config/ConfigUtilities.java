@@ -490,7 +490,7 @@ public final class ConfigUtilities {
      * @param key
      * @param comp 
      */
-    public void putRectangle(Preferences node, String key, Component comp){
+    public static void putRectangle(Preferences node, String key, Component comp){
         putRectangle(node,key,comp.getX(),comp.getY(),comp.getWidth(),comp.getHeight());
     }
 }
