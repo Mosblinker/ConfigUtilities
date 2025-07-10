@@ -10,7 +10,10 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.nio.*;
+import java.util.Objects;
 import java.util.prefs.Preferences;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
 
 /**
  * A utility library used with configuration stuff.
@@ -492,5 +495,56 @@ public final class ConfigUtilities {
      */
     public static void putRectangle(Preferences node, String key, Component comp){
         putRectangle(node,key,comp.getX(),comp.getY(),comp.getWidth(),comp.getHeight());
+    }
+    /**
+     * 
+     * @param node
+     * @param fc
+     * @param key
+     * @param defaultValue
+     * @return 
+     */
+    public static FileFilter getFileFilter(Preferences node, JFileChooser fc, 
+            String key, FileFilter defaultValue){
+            // Get the file filter for the file chooser
+        int index = node.getInt(key, -1);
+            // If there was a file filter set for the file chooser that is 
+            // within range of the choosable file filters
+        if (index >= 0 && index < fc.getChoosableFileFilters().length)
+            return fc.getChoosableFileFilters()[index];
+        return defaultValue;
+    }
+    /**
+     * 
+     * @param node
+     * @param fc
+     * @param key
+     * @param filter 
+     */
+    public static void putFileFilter(Preferences node, JFileChooser fc, 
+            String key, FileFilter filter){
+            // This will get the index for the selected file filter
+        int index = -1;
+            // Go through the choosable file filters until we've found the one 
+            // that is currently selected
+        for (int i = 0; i < fc.getChoosableFileFilters().length && index < 0; i++){
+                // If the current file filter is selected
+            if (Objects.equals(fc.getFileFilter(), fc.getChoosableFileFilters()[i]))
+                index = i;
+        }   // If the selected filter is not one of the choosable filters
+        if (index < 0)
+            node.remove(key);
+        else
+            node.putInt(key, index);
+    }
+    /**
+     * 
+     * @param node
+     * @param fc
+     * @param key 
+     */
+    public static void putFileFilter(Preferences node, JFileChooser fc, 
+            String key){
+        putFileFilter(node,fc,key,fc.getFileFilter());
     }
 }
